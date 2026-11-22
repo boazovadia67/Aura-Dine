@@ -10,8 +10,8 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
       {reset && <p className="mb-4 rounded-lg bg-olive/10 p-3 text-sm text-olive">הסיסמה עודכנה. אפשר להתחבר.</p>}
       <ActionForm action={loginAction} submitLabel="כניסה">
         <label className="block">
-          <span className="mb-1 block text-sm">דוא״ל</span>
-          <input name="email" type="email" required autoComplete="username" dir="ltr" className={inputCls} />
+          <span className="mb-1 block text-sm">דוא״ל או שם משתמש</span>
+          <input name="email" type="text" required autoComplete="username" autoCapitalize="none" spellCheck={false} dir="ltr" className={inputCls} />
         </label>
         <label className="block">
           <span className="mb-1 block text-sm">סיסמה</span>

@@ -2,9 +2,11 @@
 import bcrypt from "bcryptjs";
 import type { PrismaClient } from "../src/generated/prisma/client";
 
-// Dev/test-only manager credentials for the pilot restaurant.
-export const PILOT_MANAGER_EMAIL = "manager@aura-trattoria.test";
-export const PILOT_MANAGER_PASSWORD = "AuraDemo2026!";
+// Dev/test-only manager logins: each demo restaurant uses its username as the password
+// (admin-italy, admin-asian, admin-russia). Never deploy a database seeded with these.
+export const PILOT_MANAGER_EMAIL = "admin-italy";
+export const PILOT_MANAGER_PASSWORD = "admin-italy";
+export const ASIAN_MANAGER_PASSWORD = "admin-asian";
 
 export const PILOT_TABLES = [
   { label: "T1", seats: 2, area: "INSIDE", locationNote: "ליד החלון" },
@@ -29,8 +31,8 @@ export const PILOT_HOURS = [
 ];
 
 // Second demo restaurant (Russian cuisine). Used by `npm run db:seed` only, not by the tests.
-export const RUSSIAN_MANAGER_EMAIL = "manager@aura-moskva.test";
-export const RUSSIAN_MANAGER_PASSWORD = "AuraDemo2026!";
+export const RUSSIAN_MANAGER_EMAIL = "admin-russia";
+export const RUSSIAN_MANAGER_PASSWORD = "admin-russia";
 
 export const RUSSIAN_TABLES = [
   { label: "A1", seats: 2, area: "INSIDE", locationNote: "ליד האח" },
@@ -132,7 +134,7 @@ export async function seedRussian(prisma: PrismaClient) {
 }
 
 // Second restaurant: Asian, kosher, closed on Saturday.
-export const ASIAN_MANAGER_EMAIL = "manager@lotus-asian-kitchen.test";
+export const ASIAN_MANAGER_EMAIL = "admin-asian";
 
 export const ASIAN_TABLES = [
   { label: "A1", seats: 2, area: "INSIDE", locationNote: "ליד הבר" },
@@ -181,7 +183,7 @@ export async function seedAsian(prisma: PrismaClient) {
     data: {
       restaurantId: restaurant.id,
       email: ASIAN_MANAGER_EMAIL,
-      passwordHash: await bcrypt.hash(PILOT_MANAGER_PASSWORD, 10),
+      passwordHash: await bcrypt.hash(ASIAN_MANAGER_PASSWORD, 10),
     },
   });
   return restaurant;
