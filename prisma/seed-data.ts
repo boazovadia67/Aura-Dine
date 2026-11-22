@@ -106,7 +106,8 @@ export async function seedRussian(prisma: PrismaClient) {
     data: {
       slug: "aura-moskva",
       name: "אאורה מוסקבה",
-      imageUrl: "/restaurants/aura-moskva.svg",
+      imageUrl: "/restaurants/aura-moskva.jpg",
+      imagePosition: "center 80%", // show the laid table and velvet chairs
       cuisine: "רוסי",
       city: "תל אביב",
       kosher: "לא כשר",
