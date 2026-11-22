@@ -1,0 +1,201 @@
+// Aura Dine data model.
+// Every restaurant-owned row carries restaurantId so data stays isolated per restaurant (spec §18).
+// Enum-like fields are strings (validated in TypeScript) to stay portable between SQLite and Postgres.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Restaurant {
+  id                     String  @id @default(cuid())
+  slug                   String  @unique
+  name                   String
+  imageUrl               String
+  cuisine                String
+  city                   String
+  kosher                 String // free text, e.g. "כשר למהדרין" / "לא כשר"
+  address                String
+  parking                String
+  phone                  String?
+  menuUrl                String?
+  seatingMinutes         Int     @default(90) // open decision §21.1 – uniform seating length
+  bookingDaysAhead       Int     @default(14)
+  allowBookingWhenClosed Boolean @default(false) // §11: agent does not book while closed
+  cancelCutoffMinutes    Int? // §10.4: null = cancel any time before arrival
+  cancellationPolicyText String  @default("")
+  personaStyle           String  @default("warm") // one preset in the MVP (§6)
+  active                 Boolean @default(true)
+  createdAt              DateTime @default(now())
+
+  tables          Table[]
+  weeklyHours     WeeklyHours[]
+  hoursExceptions HoursException[]
+  bookings        Booking[]
+  callbacks       CallbackRequest[]
+  callSessions    CallSession[]
+  smsLogs         SmsLog[]
+  manager         ManagerAccount?
+}
+
+model Table {
+  id           String  @id @default(cuid())
+  restaurantId String
+  label        String
+  seats        Int
+  area         String // INSIDE | OUTSIDE
+  locationNote String  @default("")
+  active       Boolean @default(true)
+
+  restaurant Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  bookings   Booking[]
+  slots      TableSlot[]
+
+  @@index([restaurantId])
+}
+
+model WeeklyHours {
+  id           String  @id @default(cuid())
+  restaurantId String
+  weekday      Int // 0 = Sunday … 6 = Saturday
+  closed       Boolean @default(false)
+  open         String  @default("12:00") // HH:MM local time
+  close        String  @default("23:00") // HH:MM local time, may be "24:00"
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@unique([restaurantId, weekday])
+}
+
+model HoursException {
+  id           String  @id @default(cuid())
+  restaurantId String
+  date         String // YYYY-MM-DD local
+  closed       Boolean @default(true)
+  open         String?
+  close        String?
+  note         String  @default("")
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@unique([restaurantId, date])
+}
+
+model Booking {
+  id            String   @id @default(cuid())
+  code          String   @unique // short human-readable reference
+  restaurantId  String
+  tableId       String
+  customerName  String
+  phone         String
+  partySize     Int
+  area          String // INSIDE | OUTSIDE
+  date          String // YYYY-MM-DD local
+  time          String // HH:MM local
+  startAt       DateTime
+  endAt         DateTime
+  status        String   @default("CONFIRMED") // CONFIRMED | CANCELLED | NO_SHOW
+  callSessionId String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  restaurant Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  table      Table       @relation(fields: [tableId], references: [id])
+  slots      TableSlot[]
+
+  @@index([restaurantId, date])
+  @@index([restaurantId, phone])
+}
+
+// Atomic anti-double-booking (§9.4): one row per 30-minute slot a booking occupies.
+// The unique constraint makes two overlapping bookings on the same table impossible,
+// even when two requests race.
+model TableSlot {
+  id        String   @id @default(cuid())
+  tableId   String
+  slotStart DateTime
+  bookingId String
+
+  table   Table   @relation(fields: [tableId], references: [id], onDelete: Cascade)
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@unique([tableId, slotStart])
+  @@index([bookingId])
+}
+
+model CallbackRequest {
+  id           String   @id @default(cuid())
+  restaurantId String
+  name         String
+  phone        String
+  reason       String
+  handled      Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId])
+}
+
+model CallSession {
+  id           String    @id @default(cuid())
+  restaurantId String
+  messages     String    @default("[]") // Claude conversation history (JSON), appended verbatim
+  status       String    @default("ACTIVE") // ACTIVE | ENDED
+  createdAt    DateTime  @default(now())
+  endedAt      DateTime?
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId])
+}
+
+model SmsLog {
+  id           String   @id @default(cuid())
+  restaurantId String
+  phone        String
+  kind         String // BOOKING_CONFIRMED | BOOKING_UPDATED | BOOKING_CANCELLED | MENU_LINK
+  body         String
+  provider     String   @default("mock")
+  sentAt       DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId])
+}
+
+model ManagerAccount {
+  id           String   @id @default(cuid())
+  restaurantId String   @unique // one manager account per restaurant (§13)
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  restaurant Restaurant          @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  resetCodes PasswordResetCode[]
+}
+
+model PasswordResetCode {
+  id        String    @id @default(cuid())
+  managerId String
+  codeHash  String
+  expiresAt DateTime
+  attempts  Int       @default(0)
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  manager ManagerAccount @relation(fields: [managerId], references: [id], onDelete: Cascade)
+}
+
+// Dev stand-in for an email provider (password reset codes).
+model EmailLog {
+  id      String   @id @default(cuid())
+  to      String
+  subject String
+  body    String
+  sentAt  DateTime @default(now())
+}
