@@ -48,7 +48,7 @@ model Table {
   label        String
   seats        Int
   area         String // INSIDE | OUTSIDE
-  locationNote String  @default("")
+  locationNote String  @default("") // no longer used in the UI (feature dropped); kept to avoid a destructive migration
   active       Boolean @default(true)
 
   restaurant Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)

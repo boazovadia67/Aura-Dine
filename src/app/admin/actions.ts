@@ -62,7 +62,6 @@ const TableForm = z.object({
   label: z.string().trim().min(1).max(20),
   seats: z.coerce.number().int().min(1).max(30),
   area: z.enum(["INSIDE", "OUTSIDE"]),
-  locationNote: z.string().trim().max(60).default(""),
 });
 
 export async function addTableAction(_s: FormState, fd: FormData): Promise<FormState> {

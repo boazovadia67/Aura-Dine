@@ -18,7 +18,6 @@ export default async function TablesPage() {
                 <th className="p-3">שולחן</th>
                 <th className="p-3">מקומות</th>
                 <th className="p-3">אזור</th>
-                <th className="p-3">מיקום</th>
                 <th className="p-3">מצב</th>
                 <th className="p-3"></th>
               </tr>
@@ -29,7 +28,6 @@ export default async function TablesPage() {
                   <td className="p-3 font-semibold">{t.label}</td>
                   <td className="p-3">{t.seats}</td>
                   <td className="p-3">{t.area === "OUTSIDE" ? "חוץ" : "פנים"}</td>
-                  <td className="p-3">{t.locationNote || "—"}</td>
                   <td className="p-3">{t.active ? "פעיל" : "מושבת"}</td>
                   <td className="p-3">
                     <form action={toggleTableAction}>
@@ -56,7 +54,6 @@ export default async function TablesPage() {
             <option value="INSIDE">פנים</option>
             <option value="OUTSIDE">חוץ</option>
           </select>
-          <input name="locationNote" placeholder="מיקום (לא חובה), למשל ליד החלון" className={inputCls} />
         </ActionForm>
       </section>
     </div>
