@@ -9,14 +9,14 @@ export const PILOT_MANAGER_PASSWORD = "admin-italy";
 export const ASIAN_MANAGER_PASSWORD = "admin-asian";
 
 export const PILOT_TABLES = [
-  { label: "T1", seats: 2, area: "INSIDE", locationNote: "ליד החלון" },
-  { label: "T2", seats: 2, area: "INSIDE", locationNote: "" },
-  { label: "T3", seats: 4, area: "INSIDE", locationNote: "ליד החלון" },
-  { label: "T4", seats: 4, area: "INSIDE", locationNote: "" },
-  { label: "T5", seats: 6, area: "INSIDE", locationNote: "פינה שקטה" },
-  { label: "T6", seats: 8, area: "INSIDE", locationNote: "שולחן משפחתי" },
-  { label: "P1", seats: 2, area: "OUTSIDE", locationNote: "מרפסת" },
-  { label: "P2", seats: 4, area: "OUTSIDE", locationNote: "מרפסת" },
+  { label: "T1", seats: 2, area: "INSIDE" },
+  { label: "T2", seats: 2, area: "INSIDE" },
+  { label: "T3", seats: 4, area: "INSIDE" },
+  { label: "T4", seats: 4, area: "INSIDE" },
+  { label: "T5", seats: 6, area: "INSIDE" },
+  { label: "T6", seats: 8, area: "INSIDE" },
+  { label: "P1", seats: 2, area: "OUTSIDE" },
+  { label: "P2", seats: 4, area: "OUTSIDE" },
 ];
 
 // weekday 0 = Sunday
@@ -35,13 +35,13 @@ export const RUSSIAN_MANAGER_EMAIL = "admin-russia";
 export const RUSSIAN_MANAGER_PASSWORD = "admin-russia";
 
 export const RUSSIAN_TABLES = [
-  { label: "A1", seats: 2, area: "INSIDE", locationNote: "ליד האח" },
-  { label: "A2", seats: 2, area: "INSIDE", locationNote: "" },
-  { label: "A3", seats: 4, area: "INSIDE", locationNote: "ליד החלון" },
-  { label: "A4", seats: 4, area: "INSIDE", locationNote: "" },
-  { label: "A5", seats: 6, area: "INSIDE", locationNote: "פינת הסמובר" },
-  { label: "A6", seats: 10, area: "INSIDE", locationNote: "שולחן חגיגי ארוך" },
-  { label: "G1", seats: 4, area: "OUTSIDE", locationNote: "גינה" },
+  { label: "A1", seats: 2, area: "INSIDE" },
+  { label: "A2", seats: 2, area: "INSIDE" },
+  { label: "A3", seats: 4, area: "INSIDE" },
+  { label: "A4", seats: 4, area: "INSIDE" },
+  { label: "A5", seats: 6, area: "INSIDE" },
+  { label: "A6", seats: 10, area: "INSIDE" },
+  { label: "G1", seats: 4, area: "OUTSIDE" },
 ];
 
 export const RUSSIAN_HOURS = [
@@ -137,14 +137,14 @@ export async function seedRussian(prisma: PrismaClient) {
 export const ASIAN_MANAGER_EMAIL = "admin-asian";
 
 export const ASIAN_TABLES = [
-  { label: "A1", seats: 2, area: "INSIDE", locationNote: "ליד הבר" },
-  { label: "A2", seats: 2, area: "INSIDE", locationNote: "" },
-  { label: "A3", seats: 4, area: "INSIDE", locationNote: "ליד החלון" },
-  { label: "A4", seats: 4, area: "INSIDE", locationNote: "" },
-  { label: "A5", seats: 6, area: "INSIDE", locationNote: "שולחן עגול" },
-  { label: "A6", seats: 8, area: "INSIDE", locationNote: "שולחן משפחתי" },
-  { label: "O1", seats: 4, area: "OUTSIDE", locationNote: "חצר" },
-  { label: "O2", seats: 6, area: "OUTSIDE", locationNote: "חצר" },
+  { label: "A1", seats: 2, area: "INSIDE" },
+  { label: "A2", seats: 2, area: "INSIDE" },
+  { label: "A3", seats: 4, area: "INSIDE" },
+  { label: "A4", seats: 4, area: "INSIDE" },
+  { label: "A5", seats: 6, area: "INSIDE" },
+  { label: "A6", seats: 8, area: "INSIDE" },
+  { label: "O1", seats: 4, area: "OUTSIDE" },
+  { label: "O2", seats: 6, area: "OUTSIDE" },
 ];
 
 export const ASIAN_HOURS = [
