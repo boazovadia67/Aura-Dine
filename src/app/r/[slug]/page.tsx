@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
+import { ChefMascot } from "@/components/ChefMascot";
 import { VoiceCall } from "@/components/VoiceCall";
+import { mascotFor } from "@/lib/mascot";
 import { getActiveRestaurant, hoursRows } from "@/lib/restaurants";
 
 export const dynamic = "force-dynamic";
@@ -13,10 +15,15 @@ export default async function RestaurantPage({ params }: { params: Promise<{ slu
     <main className="mx-auto max-w-3xl px-4 py-10">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={r.imageUrl} alt={r.name} className="aspect-[16/7] w-full rounded-2xl object-cover" />
-      <h1 className="mt-6 text-3xl font-bold">{r.name}</h1>
-      <p className="mt-1 text-muted">
-        {r.cuisine} · {r.city} · {r.kosher}
-      </p>
+      <div className="mt-6 flex items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold">{r.name}</h1>
+          <p className="mt-1 text-muted">
+            {r.cuisine} · {r.city} · {r.kosher}
+          </p>
+        </div>
+        <ChefMascot variant={mascotFor(r)} />
+      </div>
 
       <VoiceCall slug={r.slug} restaurantName={r.name} />
       <p className="mt-3 text-sm text-muted">

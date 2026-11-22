@@ -55,3 +55,70 @@ body {
     animation: none;
   }
 }
+
+/* Chef mascot on restaurant pages */
+@keyframes chef-bounce {
+  0%,
+  100% {
+    transform: translateY(0) scale(1.05, 0.93);
+  }
+  45% {
+    transform: translateY(-16px) scale(0.97, 1.05);
+  }
+  65% {
+    transform: translateY(-16px) scale(0.97, 1.05);
+  }
+}
+@keyframes chef-shadow {
+  0%,
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  45%,
+  65% {
+    transform: scaleX(0.7);
+    opacity: 0.6;
+  }
+}
+@keyframes chef-wave {
+  0%,
+  100% {
+    transform: rotate(-8deg);
+  }
+  50% {
+    transform: rotate(14deg);
+  }
+}
+@keyframes chef-bubble {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+.chef-bounce {
+  transform-origin: 50% 100%;
+  animation: chef-bounce 1.6s ease-in-out infinite;
+}
+.chef-shadow {
+  animation: chef-shadow 1.6s ease-in-out infinite;
+}
+.chef-wave {
+  transform-box: view-box;
+  transform-origin: 92px 112px;
+  animation: chef-wave 0.8s ease-in-out infinite;
+}
+.chef-bubble {
+  animation: chef-bubble 1.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chef-bounce,
+  .chef-shadow,
+  .chef-wave,
+  .chef-bubble {
+    animation: none;
+  }
+}
