@@ -220,6 +220,7 @@ export async function seedBavarian(prisma: PrismaClient) {
       slug: "bavaria-san-mia",
       name: "Bavaria San Mia",
       imageUrl: "/restaurants/bavaria-san-mia.webp",
+      imagePosition: "center 12%", // keep the chef's face in the wide crop
       cuisine: "בווארי",
       city: "חיפה",
       kosher: "לא כשר",

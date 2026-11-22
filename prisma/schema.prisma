@@ -16,6 +16,7 @@ model Restaurant {
   slug                   String  @unique
   name                   String
   imageUrl               String
+  imagePosition          String  @default("center") // CSS object-position for the wide photo on the restaurant page
   cuisine                String
   city                   String
   kosher                 String // free text, e.g. "כשר למהדרין" / "לא כשר"

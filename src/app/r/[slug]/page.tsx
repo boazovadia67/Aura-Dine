@@ -19,7 +19,7 @@ export default async function RestaurantPage({ params }: { params: Promise<{ slu
       {/* full-width photo that flows out of the purple header */}
       <div className="relative">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={r.imageUrl} alt={r.name} className="h-64 w-full object-cover sm:h-80" />
+        <img src={r.imageUrl} alt={r.name} className="h-64 w-full object-cover sm:h-80" style={{ objectPosition: r.imagePosition }} />
         <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-brand/60 via-transparent to-brand-deep/40" />
       </div>
 
