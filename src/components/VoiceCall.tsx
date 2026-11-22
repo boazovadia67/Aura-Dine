@@ -45,7 +45,7 @@ async function postJson<T>(url: string, body: unknown, retries = 1): Promise<T> 
   }
 }
 
-export function VoiceCall({ slug, restaurantName }: { slug: string; restaurantName: string }) {
+export function VoiceCall({ slug, restaurantName, onBrand = false }: { slug: string; restaurantName: string; onBrand?: boolean }) {
   const [open, setOpen] = useState(false);
   const [phase, setPhase] = useState<Phase>("idle");
   const [noHebrewVoice, setNoHebrewVoice] = useState(false);
@@ -199,14 +199,14 @@ export function VoiceCall({ slug, restaurantName }: { slug: string; restaurantNa
       <button
         type="button"
         onClick={start}
-        className="mt-8 flex w-full items-center justify-center gap-3 rounded-2xl bg-accent px-6 py-5 text-xl font-semibold text-white shadow-lg transition hover:bg-accent-dark sm:inline-flex sm:w-auto"
+        className={`mt-8 flex w-full items-center justify-center gap-3 rounded-2xl px-6 py-5 text-xl font-bold shadow-lg transition sm:inline-flex sm:w-auto ${onBrand ? "bg-white text-brand hover:bg-brand-soft" : "bg-accent text-white hover:bg-accent-dark"}`}
       >
         <MicIcon />
         דברו עם העוזר הקולי
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-ink px-6 text-cream" role="dialog" aria-modal="true" aria-label={`שיחה עם ${restaurantName}`}>
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-brand-deep px-6 text-cream" role="dialog" aria-modal="true" aria-label={`שיחה עם ${restaurantName}`}>
           <h2 className="mb-12 text-center text-2xl font-semibold">{restaurantName}</h2>
 
           {(inCall || phase === "ending") && (
@@ -296,7 +296,7 @@ export function VoiceCall({ slug, restaurantName }: { slug: string; restaurantNa
 
 function Aura({ phase }: { phase: Phase }) {
   const color =
-    phase === "speaking" ? "bg-accent" : phase === "listening" ? "bg-emerald-500" : phase === "thinking" ? "bg-amber-400" : "bg-cream/40";
+    phase === "speaking" ? "bg-glow" : phase === "listening" ? "bg-emerald-500" : phase === "thinking" ? "bg-amber-400" : "bg-cream/40";
   return (
     <div className="relative flex h-48 w-48 items-center justify-center" aria-hidden>
       <span className={`aura-ring absolute inset-0 rounded-full ${color} opacity-40`} />
