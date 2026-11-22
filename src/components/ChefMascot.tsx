@@ -12,6 +12,7 @@ const PALETTE: Record<MascotVariant, Palette> = {
   italian: { jacket: "#ffffff", hatBand: "#2e8b57" },
   asian: { jacket: "#b4202a", hatBand: "#b4202a" },
   russian: { jacket: "#ffffff", hatBand: "#c8102e" },
+  bavarian: { jacket: "#ffffff", hatBand: "url(#bav-check)" },
   default: { jacket: "#ffffff", hatBand: "#7c3aed" },
 };
 
@@ -29,6 +30,16 @@ export function ChefMascot({ variant }: { variant: MascotVariant }) {
 
       <div className="chef-bounce">
         <svg viewBox="0 0 130 150" width="104" height="120" aria-hidden>
+          {variant === "bavarian" && (
+            <defs>
+              {/* Bavarian blue-and-white diamonds */}
+              <pattern id="bav-check" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <rect width="6" height="6" fill="#ffffff" />
+                <rect width="3" height="3" fill="#1f6fc5" />
+                <rect x="3" y="3" width="3" height="3" fill="#1f6fc5" />
+              </pattern>
+            </defs>
+          )}
           {/* waving arm (behind the body) */}
           <g className="chef-wave">
             <path d="M92 112 L108 88" stroke={p.jacket} strokeWidth="13" strokeLinecap="round" />
@@ -62,6 +73,17 @@ export function ChefMascot({ variant }: { variant: MascotVariant }) {
                 <circle cx="62" cy="130" r="2" />
                 <circle cx="62" cy="138" r="2" />
               </g>
+            </>
+          )}
+          {variant === "bavarian" && (
+            <>
+              {/* leather suspenders with a chest strap, and a checked neckerchief */}
+              <g stroke="#7a4a24" strokeWidth="5" strokeLinecap="round">
+                <path d="M44 108 L50 150" />
+                <path d="M80 108 L74 150" />
+                <path d="M47 128 L77 128" />
+              </g>
+              <path d="M46 102 L78 102 L62 122 Z" fill="url(#bav-check)" stroke="#1f6fc5" strokeWidth="1" />
             </>
           )}
           {variant === "default" && (
