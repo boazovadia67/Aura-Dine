@@ -4,20 +4,16 @@
       <stop offset="0" stop-color="#7c3aed"/>
       <stop offset="1" stop-color="#ff7a3d"/>
     </linearGradient>
-    <linearGradient id="p" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#9061f9"/>
-      <stop offset="1" stop-color="#6428d1"/>
-    </linearGradient>
   </defs>
   <rect width="64" height="64" rx="14" fill="#faf8ff"/>
-  <circle cx="29" cy="32" r="22" fill="url(#p)" stroke="url(#g)" stroke-width="3.6"/>
-  <circle cx="29" cy="32" r="16.5" fill="none" stroke="#ffffff" stroke-opacity="0.28" stroke-width="1.5"/>
-  <path d="M19.5 27 Q23 22 26.5 27" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"/>
-  <path d="M31.5 27 Q35 22 38.5 27" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"/>
-  <path d="M20.5 35 Q29 49 37.5 35 Z" fill="#2a1b4d" stroke="#2a1b4d" stroke-width="1.6" stroke-linejoin="round"/>
+  <circle cx="29" cy="32" r="22" fill="#ffffff" stroke="#7c3aed" stroke-width="3.6"/>
+  <circle cx="29" cy="32" r="16.5" fill="none" stroke="#7c3aed" stroke-opacity="0.22" stroke-width="1.5"/>
+  <path d="M19.5 27 Q23 22 26.5 27" fill="none" stroke="#1d1530" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M31.5 27 Q35 22 38.5 27" fill="none" stroke="#1d1530" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M20.5 35 Q29 49 37.5 35 Z" fill="#7a1f1f" stroke="#1d1530" stroke-width="1.6" stroke-linejoin="round"/>
   <path d="M25 42 Q29 46 33 42 Q29 40 25 42 Z" fill="#e8737a"/>
-  <circle cx="17.5" cy="34" r="2.6" fill="#ff9bb5" opacity="0.75"/>
-  <circle cx="40.5" cy="34" r="2.6" fill="#ff9bb5" opacity="0.75"/>
+  <circle cx="17.5" cy="34" r="2.6" fill="#f28b82" opacity="0.6"/>
+  <circle cx="40.5" cy="34" r="2.6" fill="#f28b82" opacity="0.6"/>
   <path d="M54 22 Q58.5 32 54 42" fill="none" stroke="url(#g)" stroke-width="3" stroke-linecap="round"/>
   <path d="M60 15 Q67 32 60 49" fill="none" stroke="url(#g)" stroke-opacity="0.55" stroke-width="2.4" stroke-linecap="round"/>
 </svg>
