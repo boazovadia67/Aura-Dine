@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Heebo } from "next/font/google";
 import Link from "next/link";
+import { Logo } from "@/components/Logo";
 import "./globals.css";
 
 const heebo = Heebo({ subsets: ["hebrew", "latin"], variable: "--font-heebo" });
@@ -16,8 +17,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen font-sans antialiased">
         <header className="border-b border-sand">
           <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-            <Link href="/" className="text-xl font-bold tracking-tight">
-              Aura <span className="text-accent">Dine</span>
+            <Link href="/" aria-label="Aura Dine, דף הבית">
+              <Logo size={34} />
             </Link>
             <Link href="/admin" className="text-sm text-muted hover:text-ink">
               כניסת מסעדות
