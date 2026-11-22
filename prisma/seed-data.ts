@@ -28,6 +28,30 @@ export const PILOT_HOURS = [
   { weekday: 6, closed: false, open: "19:00", close: "23:30" },
 ];
 
+// Second demo restaurant (Russian cuisine). Used by `npm run db:seed` only, not by the tests.
+export const RUSSIAN_MANAGER_EMAIL = "manager@aura-moskva.test";
+export const RUSSIAN_MANAGER_PASSWORD = "AuraDemo2026!";
+
+export const RUSSIAN_TABLES = [
+  { label: "A1", seats: 2, area: "INSIDE", locationNote: "ליד האח" },
+  { label: "A2", seats: 2, area: "INSIDE", locationNote: "" },
+  { label: "A3", seats: 4, area: "INSIDE", locationNote: "ליד החלון" },
+  { label: "A4", seats: 4, area: "INSIDE", locationNote: "" },
+  { label: "A5", seats: 6, area: "INSIDE", locationNote: "פינת הסמובר" },
+  { label: "A6", seats: 10, area: "INSIDE", locationNote: "שולחן חגיגי ארוך" },
+  { label: "G1", seats: 4, area: "OUTSIDE", locationNote: "גינה" },
+];
+
+export const RUSSIAN_HOURS = [
+  { weekday: 0, closed: false, open: "13:00", close: "23:30" },
+  { weekday: 1, closed: false, open: "13:00", close: "23:30" },
+  { weekday: 2, closed: false, open: "13:00", close: "23:30" },
+  { weekday: 3, closed: false, open: "13:00", close: "23:30" },
+  { weekday: 4, closed: false, open: "13:00", close: "00:00" },
+  { weekday: 5, closed: false, open: "11:00", close: "16:00" },
+  { weekday: 6, closed: false, open: "20:00", close: "00:00" },
+];
+
 export async function resetDatabase(prisma: PrismaClient) {
   await prisma.tableSlot.deleteMany();
   await prisma.booking.deleteMany();
@@ -70,6 +94,38 @@ export async function seedPilot(prisma: PrismaClient) {
       restaurantId: restaurant.id,
       email: PILOT_MANAGER_EMAIL,
       passwordHash: await bcrypt.hash(PILOT_MANAGER_PASSWORD, 10),
+    },
+  });
+  return restaurant;
+}
+
+export async function seedRussian(prisma: PrismaClient) {
+  const restaurant = await prisma.restaurant.create({
+    data: {
+      slug: "aura-moskva",
+      name: "אאורה מוסקבה",
+      imageUrl: "/restaurants/aura-moskva.svg",
+      cuisine: "רוסי",
+      city: "תל אביב",
+      kosher: "לא כשר",
+      address: "רחוב אלנבי 58, תל אביב",
+      parking: "חניון הכרמל, כשלוש דקות הליכה. אין חניה פרטית למסעדה.",
+      phone: "03-5550001",
+      menuUrl: "https://example.com/aura-moskva/menu",
+      seatingMinutes: 120,
+      bookingDaysAhead: 14,
+      cancelCutoffMinutes: 180,
+      cancellationPolicyText: "ניתן לבטל או לשנות הזמנה עד שלוש שעות לפני מועד ההגעה.",
+      personaStyle: "warm",
+      tables: { create: RUSSIAN_TABLES },
+      weeklyHours: { create: RUSSIAN_HOURS },
+    },
+  });
+  await prisma.managerAccount.create({
+    data: {
+      restaurantId: restaurant.id,
+      email: RUSSIAN_MANAGER_EMAIL,
+      passwordHash: await bcrypt.hash(RUSSIAN_MANAGER_PASSWORD, 10),
     },
   });
   return restaurant;
