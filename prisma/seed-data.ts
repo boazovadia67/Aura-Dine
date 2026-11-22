@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import type { PrismaClient } from "../src/generated/prisma/client";
 
 // Dev/test-only manager credentials for the pilot restaurant.
-export const PILOT_MANAGER_EMAIL = "manager@aura-bistro.test";
+export const PILOT_MANAGER_EMAIL = "manager@aura-trattoria.test";
 export const PILOT_MANAGER_PASSWORD = "AuraDemo2026!";
 
 export const PILOT_TABLES = [
@@ -46,16 +46,16 @@ export async function resetDatabase(prisma: PrismaClient) {
 export async function seedPilot(prisma: PrismaClient) {
   const restaurant = await prisma.restaurant.create({
     data: {
-      slug: "aura-bistro",
-      name: "אאורה ביסטרו",
-      imageUrl: "/restaurants/aura-bistro.svg",
-      cuisine: "ים תיכוני",
+      slug: "aura-trattoria",
+      name: "אאורה טראטוריה",
+      imageUrl: "/restaurants/aura-trattoria.jpg",
+      cuisine: "איטלקי",
       city: "תל אביב",
       kosher: "לא כשר",
       address: "רחוב נחלת בנימין 42, תל אביב",
       parking: "חניון ציבורי בגרוזנברג 5, כשתי דקות הליכה. אין חניה פרטית למסעדה.",
       phone: "03-5550000",
-      menuUrl: "https://example.com/aura-bistro/menu",
+      menuUrl: "https://example.com/aura-trattoria/menu",
       seatingMinutes: 90,
       bookingDaysAhead: 14,
       cancelCutoffMinutes: 120,
