@@ -12,7 +12,7 @@ const PALETTE: Record<MascotVariant, Palette> = {
   italian: { jacket: "#ffffff", hatBand: "#2e8b57" },
   asian: { jacket: "#b4202a", hatBand: "#b4202a" },
   russian: { jacket: "#ffffff", hatBand: "#c8102e" },
-  default: { jacket: "#ffffff", hatBand: "#b4532a" },
+  default: { jacket: "#ffffff", hatBand: "#7c3aed" },
 };
 
 /** Small smiling chef that bounces and waves. Each cuisine gets its own outfit. */
