@@ -9,7 +9,7 @@ export const PERSONAS: Record<string, string> = {
 };
 
 export function greetingFor(restaurantName: string): string {
-  return `שלום, הגעתם ל${restaurantName}. אני העוזר הדיגיטלי של המסעדה. איך אפשר לעזור?`;
+  return `שלום, כאן ${restaurantName}. אני העוזר הדיגיטלי של המסעדה. איך אפשר לעזור?`;
 }
 
 export function buildSystemPrompt(r: { name: string; personaStyle: string }): string {
