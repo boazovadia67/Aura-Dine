@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import type { PrismaClient } from "../src/generated/prisma/client";
 
 // Dev/test-only manager logins: each demo restaurant uses its username as the password
-// (admin-italy, admin-asian, admin-russia). Never deploy a database seeded with these.
+// (admin-italy, admin-asian, admin-russia, admin-bavaria). Never deploy a database seeded with these.
 export const PILOT_MANAGER_EMAIL = "admin-italy";
 export const PILOT_MANAGER_PASSWORD = "admin-italy";
 export const ASIAN_MANAGER_PASSWORD = "admin-asian";
@@ -184,6 +184,64 @@ export async function seedAsian(prisma: PrismaClient) {
       restaurantId: restaurant.id,
       email: ASIAN_MANAGER_EMAIL,
       passwordHash: await bcrypt.hash(ASIAN_MANAGER_PASSWORD, 10),
+    },
+  });
+  return restaurant;
+}
+
+// Fourth demo restaurant: Bavarian beer hall with a beer garden outside.
+export const BAVARIAN_MANAGER_EMAIL = "admin-bavaria";
+export const BAVARIAN_MANAGER_PASSWORD = "admin-bavaria";
+
+export const BAVARIAN_TABLES = [
+  { label: "B1", seats: 2, area: "INSIDE" },
+  { label: "B2", seats: 4, area: "INSIDE" },
+  { label: "B3", seats: 4, area: "INSIDE" },
+  { label: "B4", seats: 6, area: "INSIDE" },
+  { label: "B5", seats: 10, area: "INSIDE" },
+  { label: "G1", seats: 4, area: "OUTSIDE" },
+  { label: "G2", seats: 6, area: "OUTSIDE" },
+  { label: "G3", seats: 8, area: "OUTSIDE" },
+];
+
+export const BAVARIAN_HOURS = [
+  { weekday: 0, closed: false, open: "12:00", close: "23:30" },
+  { weekday: 1, closed: false, open: "12:00", close: "23:30" },
+  { weekday: 2, closed: false, open: "12:00", close: "23:30" },
+  { weekday: 3, closed: false, open: "12:00", close: "23:30" },
+  { weekday: 4, closed: false, open: "12:00", close: "00:30" },
+  { weekday: 5, closed: false, open: "12:00", close: "00:30" },
+  { weekday: 6, closed: false, open: "12:00", close: "23:30" },
+];
+
+export async function seedBavarian(prisma: PrismaClient) {
+  const restaurant = await prisma.restaurant.create({
+    data: {
+      slug: "bavaria-san-mia",
+      name: "Bavaria San Mia",
+      imageUrl: "/restaurants/bavaria-san-mia.webp",
+      imagePosition: "center 12%", // keep the chef's face in the wide crop
+      cuisine: "בווארי",
+      city: "חיפה",
+      kosher: "לא כשר",
+      address: "שדרות בן גוריון 30, חיפה",
+      parking: "חניה ציבורית ברחוב, ובחניון המושבה הגרמנית במרחק שתי דקות הליכה.",
+      phone: "04-5550000",
+      menuUrl: "https://example.com/bavaria-san-mia/menu",
+      seatingMinutes: 120,
+      bookingDaysAhead: 14,
+      cancelCutoffMinutes: 120,
+      cancellationPolicyText: "ניתן לבטל או לשנות הזמנה עד שעתיים לפני מועד ההגעה.",
+      personaStyle: "casual",
+      tables: { create: BAVARIAN_TABLES },
+      weeklyHours: { create: BAVARIAN_HOURS },
+    },
+  });
+  await prisma.managerAccount.create({
+    data: {
+      restaurantId: restaurant.id,
+      email: BAVARIAN_MANAGER_EMAIL,
+      passwordHash: await bcrypt.hash(BAVARIAN_MANAGER_PASSWORD, 10),
     },
   });
   return restaurant;
