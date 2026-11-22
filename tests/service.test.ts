@@ -7,6 +7,7 @@ import {
   findBookings,
   modifyBooking,
   normalizePhone,
+  availabilityOverview,
 } from "@/lib/booking/service";
 import { zonedToUtc } from "@/lib/time";
 import { resetDatabase, seedAsian, seedPilot } from "../prisma/seed-data";
@@ -153,5 +154,34 @@ describe("modify and cancel", () => {
     if (!created.ok) throw new Error("setup failed");
     const r = await cancelBooking({ restaurantId: "other-restaurant", bookingId: created.booking.bookingId, now: NOW });
     expect(r).toMatchObject({ ok: false, reason: "not_found" });
+  });
+});
+
+describe("availabilityOverview (restaurant page)", () => {
+  it("lists free times per day, area and party size, and marks closed days", async () => {
+    // both outside tables taken on Tuesday 19:00
+    await createBooking({ ...base(), area: "OUTSIDE" });
+    await createBooking({ ...base(), area: "OUTSIDE", phone: "0521111111" });
+    await prisma.hoursException.create({ data: { restaurantId: rid, date: "2026-11-25", closed: true } });
+
+    const o = await availabilityOverview(rid, { now: NOW });
+    expect(o.days).toHaveLength(7);
+    expect(o.partySizes).toEqual([2, 4, 6, 8]);
+    expect(o.areas).toEqual({ INSIDE: true, OUTSIDE: true });
+    expect(o.openNow).toBe(true);
+
+    const today = o.days[0];
+    expect(today.dayLabel).toBe("היום");
+    expect(today.byParty[2].INSIDE[0]).toBe("15:30"); // nothing in the past
+    expect(today.byParty[2].INSIDE.at(-1)).toBe("21:30");
+
+    const tue = o.days[1];
+    expect(tue.dayLabel).toBe("מחר");
+    expect(tue.byParty[2].INSIDE).toContain("19:00");
+    expect(tue.byParty[2].OUTSIDE).not.toContain("19:00");
+    expect(tue.byParty[2].OUTSIDE).toContain("17:30");
+    expect(tue.byParty[8].OUTSIDE).toEqual([]); // no 8-seat table outside
+
+    expect(o.days[2]).toMatchObject({ date: "2026-11-25", closed: true, hours: null });
   });
 });

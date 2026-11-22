@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
+import { AvailabilityBoard } from "@/components/AvailabilityBoard";
 import { ChefMascot } from "@/components/ChefMascot";
 import { VoiceCall } from "@/components/VoiceCall";
+import { availabilityOverview } from "@/lib/booking/service";
 import { mascotFor } from "@/lib/mascot";
 import { getActiveRestaurant, hoursRows } from "@/lib/restaurants";
 
@@ -10,6 +12,7 @@ export default async function RestaurantPage({ params }: { params: Promise<{ slu
   const { slug } = await params;
   const r = await getActiveRestaurant(slug);
   if (!r) notFound();
+  const availability = await availabilityOverview(r.id, { days: 7 });
 
   return (
     <main className="pb-16">
@@ -61,6 +64,8 @@ export default async function RestaurantPage({ params }: { params: Promise<{ slu
             <p className="mt-3 text-sm leading-relaxed text-muted">{r.parking}</p>
           </section>
         </div>
+
+        <AvailabilityBoard data={availability} />
       </div>
     </main>
   );
