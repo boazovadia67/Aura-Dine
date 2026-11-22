@@ -22,7 +22,7 @@ export function ChefMascot({ variant }: { variant: MascotVariant }) {
 
   return (
     <div className="chef-wrap relative flex flex-col items-center" role="img" aria-label={label}>
-      <div className="chef-bubble relative mb-1 rounded-xl border border-sand bg-white px-3 py-1 text-sm font-semibold shadow-sm">
+      <div className="chef-bubble relative mb-1 rounded-xl border border-sand bg-white px-3 py-1 text-sm font-semibold text-ink shadow-sm">
         <span dir="auto">{greeting}</span>
         <span className="absolute -bottom-1.5 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 border-b border-r border-sand bg-white" />
       </div>

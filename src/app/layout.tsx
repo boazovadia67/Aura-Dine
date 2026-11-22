@@ -15,18 +15,24 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="he" dir="rtl" className={`${heebo.variable} ${baloo.variable}`}>
-      <body className="min-h-screen font-sans antialiased">
-        <header className="border-b border-sand">
+      <body className="flex min-h-screen flex-col font-sans antialiased">
+        <header className="bg-brand text-white">
           <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
             <Link href="/" aria-label="Aura Dine, דף הבית">
-              <Logo size={34} />
+              <Logo size={36} onBrand />
             </Link>
-            <Link href="/admin" className="text-sm text-muted hover:text-ink">
+            <Link href="/admin" className="rounded-full bg-white/15 px-4 py-1.5 text-sm font-medium text-white transition hover:bg-white/25">
               כניסת מסעדות
             </Link>
           </div>
         </header>
-        {children}
+        <div className="flex-1">{children}</div>
+        <footer className="bg-brand-deep text-white/80">
+          <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm">
+            <Logo size={26} onBrand uid="footer" />
+            <span>הזמנת שולחן בשיחה קולית, בעברית.</span>
+          </div>
+        </footer>
       </body>
     </html>
   );
