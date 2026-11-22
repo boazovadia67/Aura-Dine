@@ -9,7 +9,7 @@ import {
   normalizePhone,
 } from "@/lib/booking/service";
 import { zonedToUtc } from "@/lib/time";
-import { resetDatabase, seedPilot } from "../prisma/seed-data";
+import { resetDatabase, seedAsian, seedPilot } from "../prisma/seed-data";
 
 // Monday 2026-11-23, 15:00 Israel time – restaurant open 12:00–23:00
 const NOW = zonedToUtc("2026-11-23", "15:00");
@@ -94,6 +94,20 @@ describe("createBooking", () => {
   it("requires a valid phone and name", async () => {
     expect(await createBooking({ ...base(), phone: "123" })).toMatchObject({ ok: false, reason: "invalid_phone" });
     expect(await createBooking({ ...base(), customerName: " " })).toMatchObject({ ok: false, reason: "invalid_name" });
+  });
+});
+
+describe("two restaurants", () => {
+  it("keep availability independent and follow their own hours", async () => {
+    const asian = await seedAsian(prisma);
+    // fill the Italian 8-seat table, the Asian one must still be free at the same time
+    expect((await createBooking({ ...base(), partySize: 8 })).ok).toBe(true);
+    const other = await createBooking({ ...base(), restaurantId: asian.id, partySize: 8 });
+    expect(other.ok).toBe(true);
+    // Asian restaurant is closed on Saturday (2026-11-28), Italian is open
+    expect(await checkAvailability({ ...base(), restaurantId: asian.id, date: "2026-11-28", now: zonedToUtc("2026-11-27", "13:00") }))
+      .toMatchObject({ ok: false, reason: "closed_that_day" });
+    expect((await checkAvailability({ ...base(), date: "2026-11-28", time: "20:00", now: zonedToUtc("2026-11-27", "13:00") })).ok).toBe(true);
   });
 });
 
