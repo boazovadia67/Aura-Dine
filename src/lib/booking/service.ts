@@ -9,10 +9,11 @@ import {
   bookingUpdatedSms,
   menuLinkSms,
 } from "../sms/templates";
-import { hebrewDate, toLocal, zonedToUtc } from "../time";
+import { HEBREW_WEEKDAYS, addDays, hebrewDate, toLocal, weekdayOf, zonedToUtc } from "../time";
 import {
   availableTimes,
   candidateTables,
+  hoursFor,
   isOpenAt,
   maxTableSize,
   occupiedSlots,
@@ -409,5 +410,75 @@ export async function restaurantInfo(restaurantId: string, now = new Date()) {
     bookingDaysAhead: rules.bookingDaysAhead,
     cancellationPolicy: restaurant.cancellationPolicyText || "אין מגבלת ביטול",
     hasMenuLink: Boolean(restaurant.menuUrl),
+  };
+}
+
+// ---------- public availability overview (restaurant page) ----------
+
+export interface DayAvailability {
+  date: string; // YYYY-MM-DD
+  dayLabel: string; // "היום" / "מחר" / weekday
+  dateLabel: string; // "24.11"
+  closed: boolean;
+  hours: string | null; // "12:00–23:00"
+  /** partySize -> free start times per area */
+  byParty: Record<number, { INSIDE: string[]; OUTSIDE: string[] }>;
+}
+
+export interface AvailabilityOverview {
+  openNow: boolean;
+  areas: { INSIDE: boolean; OUTSIDE: boolean };
+  partySizes: number[];
+  seatingMinutes: number;
+  days: DayAvailability[];
+}
+
+/**
+ * Free start times for the next few days, per area and party size, computed from the same
+ * rules and table slots the booking engine uses. Read-only; safe to show publicly.
+ */
+export async function availabilityOverview(
+  restaurantId: string,
+  opts: { days?: number; now?: Date } = {},
+): Promise<AvailabilityOverview> {
+  const now = opts.now ?? new Date();
+  const { rules } = await loadRules(restaurantId);
+  const tables = await loadTables(restaurantId);
+  const days = Math.min(opts.days ?? 7, rules.bookingDaysAhead + 1);
+  const biggest = Math.max(0, ...tables.map((t) => t.seats));
+  const partySizes = [2, 4, 6, 8].filter((p) => p <= biggest);
+  const today = toLocal(now).date;
+
+  const out: DayAvailability[] = [];
+  for (let i = 0; i < days; i++) {
+    const date = addDays(today, i);
+    const [, m, d] = date.split("-").map(Number);
+    const base = {
+      date,
+      dayLabel: i === 0 ? "היום" : i === 1 ? "מחר" : HEBREW_WEEKDAYS[weekdayOf(date)],
+      dateLabel: `${d}.${m}`,
+    };
+    const h = hoursFor(rules, date);
+    if (!h) {
+      out.push({ ...base, closed: true, hours: null, byParty: {} });
+      continue;
+    }
+    const busy = await loadBusy(restaurantId, date);
+    const byParty: DayAvailability["byParty"] = {};
+    for (const p of partySizes) {
+      byParty[p] = {
+        INSIDE: availableTimes(rules, now, tables, busy, date, p, "INSIDE"),
+        OUTSIDE: availableTimes(rules, now, tables, busy, date, p, "OUTSIDE"),
+      };
+    }
+    out.push({ ...base, closed: false, hours: `${h.open}–${h.close}`, byParty });
+  }
+
+  return {
+    openNow: isOpenAt(rules, now),
+    areas: { INSIDE: tables.some((t) => t.area === "INSIDE"), OUTSIDE: tables.some((t) => t.area === "OUTSIDE") },
+    partySizes,
+    seatingMinutes: rules.seatingMinutes,
+    days: out,
   };
 }
